@@ -54,7 +54,7 @@ export function StaticFrameHero({ className = '' }: StaticFrameHeroProps) {
     };
     
     loadFrames();
-  }, []);
+  }, [frameManifest.frames]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -92,15 +92,11 @@ export function StaticFrameHero({ className = '' }: StaticFrameHeroProps) {
     <div ref={containerRef} className={`relative h-[120vh] lg:h-[150vh] xl:h-[180vh] overflow-hidden ${className}`}>
       {/* Static Frame Background */}
       {isLoaded && loadedFrames.has(currentFrame) ? (
-        <img
-          className="absolute inset-0 w-full h-full object-cover transition-all duration-50 ease-linear"
-          src={frameManifest.frames[currentFrame].path}
-          alt="Car Animation Frame"
-          loading="eager"
+        <div 
+          className="absolute inset-0 w-full h-full bg-cover bg-center transition-all duration-50 ease-linear"
           style={{ 
-            filter: 'brightness(0.8) contrast(1.3) saturate(1.1) sharpen(1)',
-            objectPosition: 'center center',
-            imageRendering: 'crisp-edges' as const
+            backgroundImage: `url(${frameManifest.frames[currentFrame].path})`,
+            filter: 'brightness(0.8) contrast(1.3) saturate(1.1) sharpen(1)'
           }}
         />
       ) : (

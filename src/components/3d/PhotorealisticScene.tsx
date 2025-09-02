@@ -4,19 +4,16 @@ import { Canvas } from '@react-three/fiber';
 import { 
   OrbitControls, 
   Environment, 
-  PerspectiveCamera,
   ContactShadows,
-  Lightformer,
-  Float,
-  Text
+  Lightformer
 } from '@react-three/drei';
-import { Suspense, useRef, useState, useCallback, useEffect } from 'react';
+import { Suspense, useRef, useState, useCallback } from 'react';
 import { PureCarLoader } from './PureCarLoader';
 import { FuturisticGarage } from './FuturisticGarage';
 import { ViewerControls } from '../ui/ViewerControls';
 import { CarColor } from '@/types/car';
 import * as THREE from 'three';
-import { getPerformanceLevel, PERFORMANCE_SETTINGS } from '@/utils/performance';
+import { PERFORMANCE_SETTINGS } from '@/utils/performance';
 
 interface PhotorealisticSceneProps {
   modelPath: string;
@@ -69,7 +66,7 @@ function GarageLighting() {
 
 
 export function PhotorealisticScene({ modelPath, selectedColor, className = '' }: PhotorealisticSceneProps) {
-  const controlsRef = useRef<any>(null);
+  const controlsRef = useRef<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
   const [environment, setEnvironment] = useState('studio');
   const [autoRotate, setAutoRotate] = useState(true);
   const [isModelLoading, setIsModelLoading] = useState(true);
@@ -184,7 +181,7 @@ export function PhotorealisticScene({ modelPath, selectedColor, className = '' }
           />
           
           {/* Environment for Reflections */}
-          <Environment preset={environment as any} background={false}>
+          <Environment preset={environment as any} background={false}> {/* eslint-disable-line @typescript-eslint/no-explicit-any */}
             {/* Custom lightformers for car photography */}
             <Lightformer
               position={[5, 5, -5]}

@@ -30,25 +30,25 @@ export const ColorPicker = memo(function ColorPicker({ colors, selectedColor, on
       <div className="flex gap-3 flex-wrap">
         {colors.map((color) => {
           const isSelected = selectedColor.name === color.name;
-          const buttonStyle = useMemo(() => ({
+          const buttonStyle = {
             backgroundColor: color.hex,
             background: color.metallic 
               ? `linear-gradient(45deg, ${color.hex}, ${adjustBrightness(color.hex, 30)})` 
               : color.hex
-          }), [color.hex, color.metallic]);
+          };
 
-          const buttonClassName = useMemo(() => `
+          const buttonClassName = `
             w-12 h-12 rounded-full border-2 transition-all
             ${isSelected 
               ? 'border-white shadow-lg scale-110' 
               : 'border-gray-400 hover:border-white hover:scale-105'
             }
             ${color.metallic ? 'shadow-inner' : ''}
-          `, [isSelected, color.metallic]);
+          `;
 
-          const handleColorClick = useCallback(() => {
+          const handleColorClick = () => {
             onColorChange(color);
-          }, [color, onColorChange]);
+          };
 
           return (
             <motion.button

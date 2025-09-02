@@ -61,14 +61,14 @@ export function PureCarLoader({
         onLoadingChange(false);
       }
     }
-  }, [scene, color, metallic, carType, isValidModel, onLoadingChange]);
+  }, [scene, color, metallic, carType, isValidModel, onLoadingChange, enhanceMaterial]);
 
   const enhanceMaterial = (mesh: THREE.Mesh, color: string, metallic: boolean) => {
     if (!mesh.material) return;
     
     const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
     
-    materials.forEach((material: any, index) => {
+    materials.forEach((material: any, index) => { // eslint-disable-line @typescript-eslint/no-explicit-any
       // Convert MeshPhysicalMaterial to MeshStandardMaterial to avoid shader errors
       if (material instanceof THREE.MeshPhysicalMaterial) {
         const simplified = new THREE.MeshStandardMaterial({
@@ -103,17 +103,13 @@ export function PureCarLoader({
     });
   };
 
-  const isCarBody = (materialName: string, material: any): boolean => {
+  const isCarBody = (materialName: string, material: any): boolean => { // eslint-disable-line @typescript-eslint/no-explicit-any
     const bodyKeywords = ['paint', 'body', 'exterior', 'car', 'hull', 'panel'];
     const hasKeyword = bodyKeywords.some(keyword => materialName.includes(keyword));
     const hasColor = material.color && (material.color.r > 0.2 || material.color.g > 0.2 || material.color.b > 0.2);
     return hasKeyword || (hasColor && !materialName.includes('wheel') && !materialName.includes('glass'));
   };
 
-  const optimizeTextures = (material: any) => {
-    // Skip texture optimization to avoid uniform errors
-    return;
-  };
 
   const optimizeGeometry = (geometry: THREE.BufferGeometry) => {
     if (!geometry.attributes.normal) {

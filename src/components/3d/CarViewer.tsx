@@ -6,7 +6,6 @@ import { Suspense, useRef, useState, useCallback } from 'react';
 import { PureCarLoader } from './PureCarLoader';
 import { ViewerControls } from '../ui/ViewerControls';
 import { CarColor } from '@/types/car';
-import * as THREE from 'three';
 
 interface CarViewerProps {
   modelPath: string;
@@ -15,7 +14,7 @@ interface CarViewerProps {
 }
 
 export function CarViewer({ modelPath, selectedColor, className = '' }: CarViewerProps) {
-  const controlsRef = useRef<any>(null);
+  const controlsRef = useRef<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
   const [environment, setEnvironment] = useState('studio');
   const [autoRotate, setAutoRotate] = useState(true);
 
@@ -47,7 +46,7 @@ export function CarViewer({ modelPath, selectedColor, className = '' }: CarViewe
             autoRotate={autoRotate}
             carType="supercar"
           />
-          <Environment preset={environment as any} />
+          <Environment preset={environment as any} /> {/* eslint-disable-line @typescript-eslint/no-explicit-any */}
         </Suspense>
         <OrbitControls 
           ref={controlsRef}

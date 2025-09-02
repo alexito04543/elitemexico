@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useMemo, useEffect, Suspense } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { CarCard } from '@/components/ui/CarCard';
@@ -28,7 +28,7 @@ export default function Home() {
   // Validate initial model on load
   useEffect(() => {
     handleCarSelect(selectedCar);
-  }, []); // Only run once on mount
+  }, [handleCarSelect, selectedCar]); // Include dependencies
 
   const handleCarSelect = useCallback(async (car: Car) => {
     setIsLoading(true);

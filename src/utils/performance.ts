@@ -52,7 +52,7 @@ export const PERFORMANCE_SETTINGS = {
 export function getPerformanceLevel() {
   if (typeof window === 'undefined') return 'medium';
   
-  const memory = (navigator as any).deviceMemory || 4;
+  const memory = (navigator as any).deviceMemory || 4; // eslint-disable-line @typescript-eslint/no-explicit-any
   const cores = navigator.hardwareConcurrency || 4;
   
   // Smart device detection for optimal performance
@@ -94,6 +94,6 @@ export function optimizeForMobile() {
     reduceQuality: window.innerWidth < 768,
     simplifyGeometry: window.innerWidth < 480,
     disableAutoRotate: window.innerWidth < 768,
-    reducedAnimations: (navigator as any).connection?.effectiveType === 'slow-2g'
+    reducedAnimations: (navigator as any).connection?.effectiveType === 'slow-2g' // eslint-disable-line @typescript-eslint/no-explicit-any
   };
 }

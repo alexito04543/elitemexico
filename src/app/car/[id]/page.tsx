@@ -2,11 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { CarViewer } from '@/components/3d/CarViewer';
 import { ColorPicker } from '@/components/ui/ColorPicker';
-import { ViewerSkeleton } from '@/components/ui/LoadingSkeleton';
 import { sportsCarData } from '@/data/cars';
 import { Car, CarColor } from '@/types/car';
 import { generateCarJsonLd } from '@/utils/seo';

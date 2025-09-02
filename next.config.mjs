@@ -20,33 +20,6 @@ const nextConfig = {
       type: 'asset/resource',
     });
 
-    // Optimize for production
-    if (!dev) {
-      config.optimization.splitChunks = {
-        chunks: 'all',
-        cacheGroups: {
-          three: {
-            name: 'three',
-            test: /[\\/]node_modules[\\/](three|@react-three)[\\/]/,
-            priority: 20,
-            reuseExistingChunk: true,
-          },
-          framer: {
-            name: 'framer',
-            test: /[\\/]node_modules[\\/]framer-motion[\\/]/,
-            priority: 15,
-            reuseExistingChunk: true,
-          },
-          vendor: {
-            name: 'vendor',
-            test: /[\\/]node_modules[\\/]/,
-            priority: 10,
-            reuseExistingChunk: true,
-          },
-        },
-      };
-    }
-
     return config;
   },
   

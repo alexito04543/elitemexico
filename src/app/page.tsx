@@ -25,11 +25,6 @@ export default function Home() {
 
   // Removed fake Sketchfab optimization hook for better performance
 
-  // Validate initial model on load
-  useEffect(() => {
-    handleCarSelect(selectedCar);
-  }, [handleCarSelect, selectedCar]); // Include dependencies
-
   const handleCarSelect = useCallback(async (car: Car) => {
     setIsLoading(true);
     setModelStatus('loading');
@@ -56,6 +51,11 @@ export default function Home() {
     // Reduced delay for faster feel
     setTimeout(() => setIsLoading(false), 150);
   }, []);
+
+  // Validate initial model on load
+  useEffect(() => {
+    handleCarSelect(selectedCar);
+  }, [handleCarSelect, selectedCar]); // Include dependencies
 
   const handleColorChange = useCallback((color: CarColor) => {
     setSelectedColor(color);

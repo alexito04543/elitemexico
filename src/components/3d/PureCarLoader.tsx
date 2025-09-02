@@ -101,7 +101,7 @@ export function PureCarLoader({
         onLoadingChange(false);
       }
     }
-  }, [scene, color, metallic, carType, isValidModel, onLoadingChange]);
+  }, [scene, color, metallic, carType, isValidModel, onLoadingChange, enhanceMaterial]);
 
   const isCarBody = (materialName: string, material: any): boolean => { // eslint-disable-line @typescript-eslint/no-explicit-any
     const bodyKeywords = ['paint', 'body', 'exterior', 'car', 'hull', 'panel'];

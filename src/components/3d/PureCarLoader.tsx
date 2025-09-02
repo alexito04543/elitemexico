@@ -27,9 +27,9 @@ export function PureCarLoader({
   const [modelLoaded, setModelLoaded] = useState(false);
   
   // Only load GLB files (self-contained)
-  const isValidModel = false; // Disable 3D models temporarily for Vercel
+  const isValidModel = modelPath.endsWith('.glb');
   
-  // const { scene } = useGLTF(isValidModel ? modelPath : '', true);
+  const { scene } = useGLTF(isValidModel ? modelPath : '', true);
 
   const enhanceMaterial = (mesh: THREE.Mesh, color: string, metallic: boolean) => {
     if (!mesh.material) return;
@@ -73,12 +73,56 @@ export function PureCarLoader({
 
   // Process loaded model
   useEffect(() => {
-    // Disable 3D model loading temporarily
-    setModelLoaded(true);
-    if (onLoadingChange) {
-      onLoadingChange(false);
+    if (!scene || !isValidModel) {
+      setModelLoaded(false);
+      if (onLoadingChange) {
+        onLoadingChange(false);
+      }
+      return;
     }
-  }, [onLoadingChange]);
+
+    try {
+      // Clone the scene to avoid modifying the cached version
+      const clonedScene = scene.clone();
+      
+      // Scale and position the model
+      scaleModel(clonedScene, carType);
+      
+      // Process all meshes
+      clonedScene.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+          // Optimize geometry
+          if (child.geometry) {
+            optimizeGeometry(child.geometry);
+          }
+          
+          // Enhance materials with selected color
+          enhanceMaterial(child, color, metallic);
+          
+          // Enable shadows
+          child.castShadow = true;
+          child.receiveShadow = true;
+        }
+      });
+      
+      // Clear existing children and add the processed model
+      if (group.current) {
+        group.current.clear();
+        group.current.add(clonedScene);
+      }
+      
+      setModelLoaded(true);
+      if (onLoadingChange) {
+        onLoadingChange(false);
+      }
+    } catch (error) {
+      console.error('Error processing 3D model:', error);
+      setModelLoaded(false);
+      if (onLoadingChange) {
+        onLoadingChange(false);
+      }
+    }
+  }, [scene, color, metallic, carType, isValidModel, onLoadingChange]);
 
   const isCarBody = (materialName: string, material: any): boolean => { // eslint-disable-line @typescript-eslint/no-explicit-any
     const bodyKeywords = ['paint', 'body', 'exterior', 'car', 'hull', 'panel'];
@@ -126,7 +170,7 @@ export function PureCarLoader({
     }
   });
 
-  // Always show fallback car shape for now
+  // Show real model if loaded, otherwise fallback
   return (
     <group 
       ref={group}
@@ -134,10 +178,12 @@ export function PureCarLoader({
       onPointerOut={() => setHovered(false)}
       scale={hovered && modelLoaded ? 1.015 : 1}
     >
-      <mesh>
-        <boxGeometry args={[3, 1.5, 6]} />
-        <meshStandardMaterial color={color} metalness={metallic ? 0.8 : 0.2} roughness={0.3} />
-      </mesh>
+      {!modelLoaded && (
+        <mesh>
+          <boxGeometry args={[3, 1.5, 6]} />
+          <meshStandardMaterial color={color} metalness={metallic ? 0.8 : 0.2} roughness={0.3} />
+        </mesh>
+      )}
     </group>
   );
 }

@@ -14,13 +14,11 @@ const nextConfig = {
   
   // Bundle optimization
   webpack: (config, { dev, isServer }) => {
-    // Optimize Three.js imports
-    config.externals = config.externals || [];
-    if (!dev && !isServer) {
-      config.externals.push({
-        'three': 'THREE'
-      });
-    }
+    // GLB file handling for Vercel
+    config.module.rules.push({
+      test: /\.(glb|gltf)$/,
+      type: 'asset/resource',
+    });
 
     // Optimize for production
     if (!dev) {

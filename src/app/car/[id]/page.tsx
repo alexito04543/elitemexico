@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { CarViewer } from '@/components/3d/CarViewer';
+import { SimpleCarViewer } from '@/components/ui/SimpleCarViewer';
 import { ColorPicker } from '@/components/ui/ColorPicker';
 import { sportsCarData } from '@/data/cars';
 import { Car, CarColor } from '@/types/car';

@@ -9,19 +9,10 @@ const nextConfig = {
   
   // Enable experimental features for better performance
   experimental: {
-    optimizePackageImports: ['@react-three/fiber', '@react-three/drei', 'framer-motion'],
+    optimizePackageImports: ['framer-motion'],
   },
   
-  // Bundle optimization
-  webpack: (config, { dev, isServer }) => {
-    // GLB file handling for Vercel
-    config.module.rules.push({
-      test: /\.(glb|gltf)$/,
-      type: 'asset/resource',
-    });
-
-    return config;
-  },
+  // Removed Three.js webpack config to eliminate errors
   
   // Performance optimizations
   swcMinify: true,

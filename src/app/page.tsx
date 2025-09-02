@@ -10,7 +10,7 @@ import { StaticFrameHero } from '@/components/ui/StaticFrameHero';
 import { sportsCarData } from '@/data/cars';
 import { Car, CarColor } from '@/types/car';
 
-const CarViewer = dynamic(() => import('@/components/3d/CarViewer').then(mod => ({ default: mod.CarViewer })), {
+const SimpleCarViewer = dynamic(() => import('@/components/ui/SimpleCarViewer').then(mod => ({ default: mod.SimpleCarViewer })), {
   ssr: false,
   loading: () => <ViewerSkeleton />
 });
@@ -134,7 +134,7 @@ export default function Home() {
                     </motion.div>
                   </div>
                 )}
-                <CarViewer
+                <SimpleCarViewer
                   modelPath={selectedCar.modelPath}
                   selectedColor={selectedColor}
                   className="w-full h-full"

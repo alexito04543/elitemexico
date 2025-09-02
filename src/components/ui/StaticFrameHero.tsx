@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 
 interface StaticFrameHeroProps {
@@ -12,15 +12,16 @@ export function StaticFrameHero({ className = '' }: StaticFrameHeroProps) {
   const [currentFrame, setCurrentFrame] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const [loadedFrames, setLoadedFrames] = useState<Set<number>>(new Set());
+  const [preloadedImages, setPreloadedImages] = useState<Map<number, HTMLImageElement>>(new Map());
   
-  // Pre-generated frame manifest from your extracted frames
-  const frameManifest = {
+  // Pre-generated frame manifest from your extracted frames - moved outside to avoid recreation
+  const frameManifest = useMemo(() => ({
     totalFrames: 67, // Your actual frame count
     frames: Array.from({length: 67}, (_, i) => ({
       index: i,
       path: `/images/carro3/carro3_${(i + 1).toString().padStart(6, '0')}.jpg`
     }))
-  };
+  }), []);
 
   // Ultra-fast loading - show content immediately, load frames in background
   useEffect(() => {
@@ -29,80 +30,96 @@ export function StaticFrameHero({ className = '' }: StaticFrameHeroProps) {
     
     const loadFrames = () => {
       const loadedSet = new Set<number>();
+      const imageMap = new Map<number, HTMLImageElement>();
       
-      // Load only first frame immediately for instant display
-      const img = new Image();
-      img.onload = () => {
+      // Load first frame immediately
+      const firstImg = new Image();
+      firstImg.onload = () => {
         loadedSet.add(0);
+        imageMap.set(0, firstImg);
         setLoadedFrames(new Set(loadedSet));
+        setPreloadedImages(new Map(imageMap));
       };
-      img.src = frameManifest.frames[0].path;
+      firstImg.src = frameManifest.frames[0].path;
       
-      // Load remaining frames in background without blocking UI
-      requestIdleCallback(() => {
-        frameManifest.frames.forEach((frame, index) => {
-          if (index > 0) {
-            const img = new Image();
-            img.onload = () => {
-              loadedSet.add(index);
-              setLoadedFrames(new Set(loadedSet));
-            };
-            img.src = frame.path;
-          }
-        });
+      // Preload all frames systematically to prevent flicker
+      frameManifest.frames.forEach((frame, index) => {
+        if (index > 0) {
+          const img = new Image();
+          img.onload = () => {
+            loadedSet.add(index);
+            imageMap.set(index, img);
+            setLoadedFrames(new Set(loadedSet));
+            setPreloadedImages(new Map(imageMap));
+          };
+          img.src = frame.path;
+        }
       });
     };
     
     loadFrames();
-  }, [frameManifest.frames]);
+  }, []); // Empty dependency array - only run once
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (!containerRef.current) return;
-
-      const rect = containerRef.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      
-      let scrollProgress = 0;
-      
-      if (rect.top <= windowHeight && rect.bottom >= 0) {
-        const scrolledDistance = windowHeight - rect.top;
-        const totalScrollableDistance = windowHeight + rect.height;
-        scrollProgress = Math.max(0, Math.min(1, scrolledDistance / totalScrollableDistance));
-      } else if (rect.bottom < 0) {
-        scrollProgress = 1;
-      }
-      
-      const frameIndex = Math.floor(scrollProgress * (frameManifest.totalFrames - 1));
-      setCurrentFrame(frameIndex);
-    };
-
-    // High-frequency scroll for smoothness
-    const throttledScroll = () => {
-      requestAnimationFrame(handleScroll);
-    };
-
-    window.addEventListener('scroll', throttledScroll, { passive: true });
-    throttledScroll();
+    let ticking = false;
     
-    return () => window.removeEventListener('scroll', throttledScroll);
-  }, [frameManifest.totalFrames]);
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          if (!containerRef.current) {
+            ticking = false;
+            return;
+          }
+
+          const rect = containerRef.current.getBoundingClientRect();
+          const windowHeight = window.innerHeight;
+          
+          let scrollProgress = 0;
+          
+          if (rect.top <= windowHeight && rect.bottom >= 0) {
+            const scrolledDistance = windowHeight - rect.top;
+            const totalScrollableDistance = windowHeight + rect.height;
+            scrollProgress = Math.max(0, Math.min(1, scrolledDistance / totalScrollableDistance));
+          } else if (rect.bottom < 0) {
+            scrollProgress = 1;
+          }
+          
+          const frameIndex = Math.floor(scrollProgress * (frameManifest.totalFrames - 1));
+          
+          // Only update if frame actually changed AND is loaded
+          if (frameIndex !== currentFrame && loadedFrames.has(frameIndex)) {
+            setCurrentFrame(frameIndex);
+          }
+          
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [currentFrame, loadedFrames, frameManifest.totalFrames]);
 
   return (
     <div ref={containerRef} className={`relative h-[120vh] lg:h-[150vh] xl:h-[180vh] overflow-hidden ${className}`}>
-      {/* Static Frame Background */}
-      {isLoaded && loadedFrames.has(currentFrame) ? (
-        <div 
-          className="absolute inset-0 w-full h-full bg-cover bg-center transition-all duration-50 ease-linear"
-          style={{ 
-            backgroundImage: `url(${frameManifest.frames[currentFrame].path})`,
-            filter: 'brightness(0.8) contrast(1.3) saturate(1.1) sharpen(1)'
-          }}
-        />
-      ) : (
-        // Fallback frame while loading
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-red-900" />
-      )}
+      {/* Static Frame Background - No flicker */}
+      <div className="absolute inset-0 w-full h-full">
+        {loadedFrames.has(currentFrame) ? (
+          <div 
+            className="absolute inset-0 w-full h-full bg-cover bg-center"
+            style={{ 
+              backgroundImage: `url(${frameManifest.frames[currentFrame].path})`,
+              filter: 'brightness(0.8) contrast(1.3) saturate(1.1)'
+            }}
+          />
+        ) : (
+          // Fallback frame while loading - same position to prevent flicker
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-red-900" />
+        )}
+      </div>
       
       {/* Fast Loading State */}
       {!isLoaded && (

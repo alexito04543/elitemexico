@@ -8,156 +8,19 @@ interface StaticFrameHeroProps {
 }
 
 export function StaticFrameHero({ className = '' }: StaticFrameHeroProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [currentFrame, setCurrentFrame] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [loadedFrames, setLoadedFrames] = useState<Set<number>>(new Set());
-  const [preloadedImages, setPreloadedImages] = useState<Map<number, HTMLImageElement>>(new Map());
-  
-  // Pre-generated frame manifest from your extracted frames - moved outside to avoid recreation
-  const frameManifest = useMemo(() => ({
-    totalFrames: 67, // Your actual frame count
-    frames: Array.from({length: 67}, (_, i) => ({
-      index: i,
-      path: `/images/carro3/carro3_${(i + 1).toString().padStart(6, '0')}.jpg`
-    }))
-  }), []);
-
-  // Ultra-fast loading - show content immediately, load frames in background
-  useEffect(() => {
-    // Show content immediately without waiting for frames
-    setIsLoaded(true);
-    
-    const loadedSet = new Set<number>();
-    const imageMap = new Map<number, HTMLImageElement>();
-    
-    // Load first frame immediately
-    const firstImg = new Image();
-    firstImg.onload = () => {
-      loadedSet.add(0);
-      imageMap.set(0, firstImg);
-      setLoadedFrames(prev => {
-        const newSet = new Set(prev);
-        newSet.add(0);
-        return newSet;
-      });
-      setPreloadedImages(prev => {
-        const newMap = new Map(prev);
-        newMap.set(0, firstImg);
-        return newMap;
-      });
-    };
-    firstImg.src = frameManifest.frames[0].path;
-    
-    // Preload remaining frames systematically 
-    frameManifest.frames.forEach((frame, index) => {
-      if (index > 0) {
-        const img = new Image();
-        img.onload = () => {
-          setLoadedFrames(prev => {
-            const newSet = new Set(prev);
-            newSet.add(index);
-            return newSet;
-          });
-          setPreloadedImages(prev => {
-            const newMap = new Map(prev);
-            newMap.set(index, img);
-            return newMap;
-          });
-        };
-        img.src = frame.path;
-      }
-    });
-  }, []); // Empty dependency array - only run once
-
-  const handleScroll = useCallback(() => {
-    if (!containerRef.current) return;
-
-    const rect = containerRef.current.getBoundingClientRect();
-    const windowHeight = window.innerHeight;
-    
-    let scrollProgress = 0;
-    
-    if (rect.top <= windowHeight && rect.bottom >= 0) {
-      const scrolledDistance = windowHeight - rect.top;
-      const totalScrollableDistance = windowHeight + rect.height;
-      scrollProgress = Math.max(0, Math.min(1, scrolledDistance / totalScrollableDistance));
-    } else if (rect.bottom < 0) {
-      scrollProgress = 1;
-    }
-    
-    const frameIndex = Math.floor(scrollProgress * (frameManifest.totalFrames - 1));
-    
-    // Only update if frame actually changed
-    setCurrentFrame(prevFrame => {
-      if (frameIndex !== prevFrame && loadedFrames.has(frameIndex)) {
-        return frameIndex;
-      }
-      return prevFrame;
-    });
-  }, [frameManifest.totalFrames, loadedFrames]);
-
-  useEffect(() => {
-    let ticking = false;
-    
-    const throttledScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          handleScroll();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener('scroll', throttledScroll, { passive: true });
-    throttledScroll();
-    
-    return () => window.removeEventListener('scroll', throttledScroll);
-  }, [handleScroll]);
+  // Simplified version to prevent React loops
+  const [isLoaded, setIsLoaded] = useState(true);
 
   return (
-    <div ref={containerRef} className={`relative h-[120vh] lg:h-[150vh] xl:h-[180vh] overflow-hidden ${className}`}>
-      {/* Static Frame Background - No flicker */}
-      <div className="absolute inset-0 w-full h-full">
-        {loadedFrames.has(currentFrame) ? (
-          <div 
-            className="absolute inset-0 w-full h-full bg-cover bg-center"
-            style={{ 
-              backgroundImage: `url(${frameManifest.frames[currentFrame].path})`,
-              filter: 'brightness(0.8) contrast(1.3) saturate(1.1)'
-            }}
-          />
-        ) : (
-          // Fallback frame while loading - same position to prevent flicker
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-red-900" />
-        )}
-      </div>
-      
-      {/* Fast Loading State */}
-      {!isLoaded && (
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-red-900 flex items-center justify-center">
-          <div className="text-center text-white">
-            <motion.div
-              className="text-6xl mb-4"
-              animate={{ 
-                rotate: [0, 360],
-                scale: [1, 1.1, 1]
-              }}
-              transition={{ 
-                rotate: { duration: 1.5, repeat: Infinity, ease: "linear" },
-                scale: { duration: 0.8, repeat: Infinity }
-              }}
-            >
-              🏎️
-            </motion.div>
-            <p className="text-lg font-medium">Cargando experiencia premium...</p>
-            <div className="mt-3 text-sm text-gray-400">
-              {loadedFrames.size}/{frameManifest.totalFrames} frames listos
-            </div>
-          </div>
-        </div>
-      )}
+    <div className={`relative h-[120vh] lg:h-[150vh] xl:h-[180vh] overflow-hidden ${className}`}>
+      {/* Static Background - No animation to prevent React loops */}
+      <div 
+        className="absolute inset-0 w-full h-full bg-cover bg-center"
+        style={{ 
+          backgroundImage: `url(/images/carro3/carro3_000001.jpg)`,
+          filter: 'brightness(0.8) contrast(1.3) saturate(1.1)'
+        }}
+      />
       
       {/* Content Overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30 flex items-start justify-center pt-32">
@@ -272,13 +135,6 @@ export function StaticFrameHero({ className = '' }: StaticFrameHeroProps) {
             </motion.div>
           </motion.div>
         </div>
-      </div>
-      
-      {/* Performance Debug */}
-      <div className="absolute top-4 left-4 bg-black/80 text-white text-xs p-3 rounded-lg backdrop-blur-sm">
-        <div>Frame: {currentFrame + 1}/{frameManifest.totalFrames}</div>
-        <div>Loaded: {loadedFrames.size}/{frameManifest.totalFrames}</div>
-        <div>Status: {loadedFrames.has(currentFrame) ? '✅ Ready' : '⏳ Loading...'}</div>
       </div>
     </div>
   );

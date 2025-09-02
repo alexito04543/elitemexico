@@ -2,7 +2,7 @@
 
 import { CarColor } from '@/types/car';
 import { motion } from 'framer-motion';
-import { memo, useCallback, useMemo } from 'react';
+import { memo } from 'react';
 
 interface ColorPickerProps {
   colors: CarColor[];

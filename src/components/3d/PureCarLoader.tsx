@@ -31,38 +31,6 @@ export function PureCarLoader({
   
   const { scene } = useGLTF(isValidModel ? modelPath : '', true);
 
-  // Process loaded model
-  useEffect(() => {
-    if (scene && group.current && isValidModel) {
-      group.current.clear();
-      
-      const enhancedScene = scene.clone();
-      
-      enhancedScene.traverse((child) => {
-        if (child instanceof THREE.Mesh) {
-          child.castShadow = true;
-          child.receiveShadow = true;
-          
-          if (child.material) {
-            enhanceMaterial(child, color, metallic);
-          }
-          
-          if (child.geometry) {
-            optimizeGeometry(child.geometry);
-          }
-        }
-      });
-      
-      scaleModel(enhancedScene, carType);
-      group.current.add(enhancedScene);
-      
-      setModelLoaded(true);
-      if (onLoadingChange) {
-        onLoadingChange(false);
-      }
-    }
-  }, [scene, color, metallic, carType, isValidModel, onLoadingChange, enhanceMaterial]);
-
   const enhanceMaterial = (mesh: THREE.Mesh, color: string, metallic: boolean) => {
     if (!mesh.material) return;
     
@@ -102,6 +70,38 @@ export function PureCarLoader({
       }
     });
   };
+
+  // Process loaded model
+  useEffect(() => {
+    if (scene && group.current && isValidModel) {
+      group.current.clear();
+      
+      const enhancedScene = scene.clone();
+      
+      enhancedScene.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+          child.castShadow = true;
+          child.receiveShadow = true;
+          
+          if (child.material) {
+            enhanceMaterial(child, color, metallic);
+          }
+          
+          if (child.geometry) {
+            optimizeGeometry(child.geometry);
+          }
+        }
+      });
+      
+      scaleModel(enhancedScene, carType);
+      group.current.add(enhancedScene);
+      
+      setModelLoaded(true);
+      if (onLoadingChange) {
+        onLoadingChange(false);
+      }
+    }
+  }, [scene, color, metallic, carType, isValidModel, onLoadingChange]);
 
   const isCarBody = (materialName: string, material: any): boolean => { // eslint-disable-line @typescript-eslint/no-explicit-any
     const bodyKeywords = ['paint', 'body', 'exterior', 'car', 'hull', 'panel'];

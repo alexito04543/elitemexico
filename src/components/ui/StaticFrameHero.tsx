@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, useMemo } from 'react';
+import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 
 interface StaticFrameHeroProps {
@@ -28,80 +28,93 @@ export function StaticFrameHero({ className = '' }: StaticFrameHeroProps) {
     // Show content immediately without waiting for frames
     setIsLoaded(true);
     
-    const loadFrames = () => {
-      const loadedSet = new Set<number>();
-      const imageMap = new Map<number, HTMLImageElement>();
-      
-      // Load first frame immediately
-      const firstImg = new Image();
-      firstImg.onload = () => {
-        loadedSet.add(0);
-        imageMap.set(0, firstImg);
-        setLoadedFrames(new Set(loadedSet));
-        setPreloadedImages(new Map(imageMap));
-      };
-      firstImg.src = frameManifest.frames[0].path;
-      
-      // Preload all frames systematically to prevent flicker
-      frameManifest.frames.forEach((frame, index) => {
-        if (index > 0) {
-          const img = new Image();
-          img.onload = () => {
-            loadedSet.add(index);
-            imageMap.set(index, img);
-            setLoadedFrames(new Set(loadedSet));
-            setPreloadedImages(new Map(imageMap));
-          };
-          img.src = frame.path;
-        }
+    const loadedSet = new Set<number>();
+    const imageMap = new Map<number, HTMLImageElement>();
+    
+    // Load first frame immediately
+    const firstImg = new Image();
+    firstImg.onload = () => {
+      loadedSet.add(0);
+      imageMap.set(0, firstImg);
+      setLoadedFrames(prev => {
+        const newSet = new Set(prev);
+        newSet.add(0);
+        return newSet;
+      });
+      setPreloadedImages(prev => {
+        const newMap = new Map(prev);
+        newMap.set(0, firstImg);
+        return newMap;
       });
     };
+    firstImg.src = frameManifest.frames[0].path;
     
-    loadFrames();
+    // Preload remaining frames systematically 
+    frameManifest.frames.forEach((frame, index) => {
+      if (index > 0) {
+        const img = new Image();
+        img.onload = () => {
+          setLoadedFrames(prev => {
+            const newSet = new Set(prev);
+            newSet.add(index);
+            return newSet;
+          });
+          setPreloadedImages(prev => {
+            const newMap = new Map(prev);
+            newMap.set(index, img);
+            return newMap;
+          });
+        };
+        img.src = frame.path;
+      }
+    });
   }, []); // Empty dependency array - only run once
+
+  const handleScroll = useCallback(() => {
+    if (!containerRef.current) return;
+
+    const rect = containerRef.current.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+    
+    let scrollProgress = 0;
+    
+    if (rect.top <= windowHeight && rect.bottom >= 0) {
+      const scrolledDistance = windowHeight - rect.top;
+      const totalScrollableDistance = windowHeight + rect.height;
+      scrollProgress = Math.max(0, Math.min(1, scrolledDistance / totalScrollableDistance));
+    } else if (rect.bottom < 0) {
+      scrollProgress = 1;
+    }
+    
+    const frameIndex = Math.floor(scrollProgress * (frameManifest.totalFrames - 1));
+    
+    // Only update if frame actually changed
+    setCurrentFrame(prevFrame => {
+      if (frameIndex !== prevFrame && loadedFrames.has(frameIndex)) {
+        return frameIndex;
+      }
+      return prevFrame;
+    });
+  }, [frameManifest.totalFrames, loadedFrames]);
 
   useEffect(() => {
     let ticking = false;
     
-    const handleScroll = () => {
+    const throttledScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
-          if (!containerRef.current) {
-            ticking = false;
-            return;
-          }
-
-          const rect = containerRef.current.getBoundingClientRect();
-          const windowHeight = window.innerHeight;
-          
-          let scrollProgress = 0;
-          
-          if (rect.top <= windowHeight && rect.bottom >= 0) {
-            const scrolledDistance = windowHeight - rect.top;
-            const totalScrollableDistance = windowHeight + rect.height;
-            scrollProgress = Math.max(0, Math.min(1, scrolledDistance / totalScrollableDistance));
-          } else if (rect.bottom < 0) {
-            scrollProgress = 1;
-          }
-          
-          const frameIndex = Math.floor(scrollProgress * (frameManifest.totalFrames - 1));
-          
-          // Only update if frame actually changed AND is loaded
-          if (frameIndex !== currentFrame && loadedFrames.has(frameIndex)) {
-            setCurrentFrame(frameIndex);
-          }
-          
+          handleScroll();
           ticking = false;
         });
         ticking = true;
       }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
+    window.addEventListener('scroll', throttledScroll, { passive: true });
+    throttledScroll();
     
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [currentFrame, loadedFrames, frameManifest.totalFrames]);
+    return () => window.removeEventListener('scroll', throttledScroll);
+  }, [handleScroll]);
 
   return (
     <div ref={containerRef} className={`relative h-[120vh] lg:h-[150vh] xl:h-[180vh] overflow-hidden ${className}`}>

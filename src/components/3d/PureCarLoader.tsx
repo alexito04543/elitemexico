@@ -27,9 +27,9 @@ export function PureCarLoader({
   const [modelLoaded, setModelLoaded] = useState(false);
   
   // Only load GLB files (self-contained)
-  const isValidModel = modelPath && modelPath.endsWith('.glb');
+  const isValidModel = false; // Disable 3D models temporarily for Vercel
   
-  const { scene } = useGLTF(isValidModel ? modelPath : '', true);
+  // const { scene } = useGLTF(isValidModel ? modelPath : '', true);
 
   const enhanceMaterial = (mesh: THREE.Mesh, color: string, metallic: boolean) => {
     if (!mesh.material) return;
@@ -73,35 +73,12 @@ export function PureCarLoader({
 
   // Process loaded model
   useEffect(() => {
-    if (scene && group.current && isValidModel) {
-      group.current.clear();
-      
-      const enhancedScene = scene.clone();
-      
-      enhancedScene.traverse((child) => {
-        if (child instanceof THREE.Mesh) {
-          child.castShadow = true;
-          child.receiveShadow = true;
-          
-          if (child.material) {
-            enhanceMaterial(child, color, metallic);
-          }
-          
-          if (child.geometry) {
-            optimizeGeometry(child.geometry);
-          }
-        }
-      });
-      
-      scaleModel(enhancedScene, carType);
-      group.current.add(enhancedScene);
-      
-      setModelLoaded(true);
-      if (onLoadingChange) {
-        onLoadingChange(false);
-      }
+    // Disable 3D model loading temporarily
+    setModelLoaded(true);
+    if (onLoadingChange) {
+      onLoadingChange(false);
     }
-  }, [scene, color, metallic, carType, isValidModel, onLoadingChange, enhanceMaterial]);
+  }, [onLoadingChange]);
 
   const isCarBody = (materialName: string, material: any): boolean => { // eslint-disable-line @typescript-eslint/no-explicit-any
     const bodyKeywords = ['paint', 'body', 'exterior', 'car', 'hull', 'panel'];
@@ -149,24 +126,19 @@ export function PureCarLoader({
     }
   });
 
-  if (!isValidModel) {
-    return (
-      <group>
-        <mesh>
-          <boxGeometry args={[3, 1.5, 6]} />
-          <meshStandardMaterial color={color} metalness={metallic ? 0.8 : 0.2} roughness={0.3} />
-        </mesh>
-      </group>
-    );
-  }
-
+  // Always show fallback car shape for now
   return (
     <group 
       ref={group}
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
       scale={hovered && modelLoaded ? 1.015 : 1}
-    />
+    >
+      <mesh>
+        <boxGeometry args={[3, 1.5, 6]} />
+        <meshStandardMaterial color={color} metalness={metallic ? 0.8 : 0.2} roughness={0.3} />
+      </mesh>
+    </group>
   );
 }
 

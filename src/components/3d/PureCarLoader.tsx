@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useCallback } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useGLTF } from '@react-three/drei';
@@ -31,7 +31,7 @@ export function PureCarLoader({
   
   const { scene } = useGLTF(isValidModel ? modelPath : '', true);
 
-  const enhanceMaterial = (mesh: THREE.Mesh, color: string, metallic: boolean) => {
+  const enhanceMaterial = useCallback((mesh: THREE.Mesh, color: string, metallic: boolean) => {
     if (!mesh.material) return;
     
     const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
@@ -69,7 +69,7 @@ export function PureCarLoader({
         }
       }
     });
-  };
+  }, []);
 
   // Process loaded model
   useEffect(() => {

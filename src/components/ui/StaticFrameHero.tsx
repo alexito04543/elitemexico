@@ -31,7 +31,11 @@ export function StaticFrameHero({ className = '' }: StaticFrameHeroProps) {
         img.onload = () => {
           imageCache.current.set(i, img);
           loadedCount++;
-          setLoadedFrames(prev => new Set([...prev, i]));
+          setLoadedFrames(prev => {
+            const newSet = new Set(prev);
+            newSet.add(i);
+            return newSet;
+          });
           setLoadingProgress((loadedCount / totalFrames) * 100);
           resolve();
         };

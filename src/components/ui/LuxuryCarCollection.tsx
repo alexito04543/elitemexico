@@ -156,7 +156,7 @@ export function LuxuryCarCollection() {
     }
   };
 
-  return (
+  const renderContent = () => (
     <section className="relative min-h-screen bg-gradient-to-br from-black via-gray-900 to-blue-900/20 py-20 px-4">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
@@ -662,4 +662,6 @@ export function LuxuryCarCollection() {
       <div className="absolute bottom-1/4 left-1/4 w-1.5 h-1.5 bg-yellow-400 rounded-full animate-pulse opacity-25" />
     </section>
   );
+  
+  return renderContent();
 }

@@ -314,7 +314,7 @@ export default function NuevosLanzamientosPage() {
     // The AnimatePresence will handle the re-appearance of the main button
   };
 
-  return (
+  const renderContent = () => (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-blue-900/20">
       <ClientNavbar />
       
@@ -894,4 +894,6 @@ export default function NuevosLanzamientosPage() {
 
     </div>
   );
+  
+  return renderContent();
 }

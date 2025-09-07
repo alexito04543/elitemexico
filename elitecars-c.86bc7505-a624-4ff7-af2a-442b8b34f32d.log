@@ -1,0 +1,110 @@
+2025-09-07T07:23:39.788402Z	Cloning repository...
+2025-09-07T07:23:42.193668Z	From https://github.com/alexito04543/EliteCars
+2025-09-07T07:23:42.194086Z	 * branch            5282281990527cb19ccfa2af00fec26693c6c214 -> FETCH_HEAD
+2025-09-07T07:23:42.194195Z	
+2025-09-07T07:23:42.531146Z	HEAD is now at 5282281 Remove heavy 3D model files for optimized deployment
+2025-09-07T07:23:42.531678Z	
+2025-09-07T07:23:42.609925Z	
+2025-09-07T07:23:42.61045Z	Using v2 root directory strategy
+2025-09-07T07:23:42.632627Z	Success: Finished cloning repository files
+2025-09-07T07:23:44.391911Z	Checking for configuration in a Wrangler configuration file (BETA)
+2025-09-07T07:23:44.39272Z	
+2025-09-07T07:23:45.494072Z	No wrangler.toml file found. Continuing.
+2025-09-07T07:23:45.561513Z	Detected the following tools from environment: npm@10.9.2, nodejs@22.16.0
+2025-09-07T07:23:45.562071Z	Installing project dependencies: npm clean-install --progress=false
+2025-09-07T07:23:48.102799Z	npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+2025-09-07T07:23:48.474767Z	npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+2025-09-07T07:23:49.224914Z	npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
+2025-09-07T07:23:49.258559Z	npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
+2025-09-07T07:23:49.348947Z	npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+2025-09-07T07:23:50.543004Z	npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+2025-09-07T07:23:55.468919Z	
+2025-09-07T07:23:55.469275Z	added 384 packages, and audited 385 packages in 10s
+2025-09-07T07:23:55.469413Z	
+2025-09-07T07:23:55.469505Z	147 packages are looking for funding
+2025-09-07T07:23:55.469719Z	  run `npm fund` for details
+2025-09-07T07:23:55.470329Z	
+2025-09-07T07:23:55.470465Z	found 0 vulnerabilities
+2025-09-07T07:23:55.504398Z	Executing user command: npx @cloudflare/next-on-pages@1
+2025-09-07T07:23:56.559469Z	npm warn exec The following package was not found and will be installed: @cloudflare/next-on-pages@1.13.16
+2025-09-07T07:24:08.265783Z	npm warn deprecated path-match@1.2.4: This package is archived and no longer maintained. For support, visit https://github.com/expressjs/express/discussions
+2025-09-07T07:24:10.524531Z	npm warn deprecated @cloudflare/next-on-pages@1.13.16: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+2025-09-07T07:24:18.729809Z	⚡️ @cloudflare/next-on-pages CLI v.1.13.16
+2025-09-07T07:24:18.892398Z	⚡️ Detected Package Manager: npm (10.9.2)
+2025-09-07T07:24:18.892642Z	⚡️ Preparing project...
+2025-09-07T07:24:18.895702Z	⚡️ Project is ready
+2025-09-07T07:24:18.895919Z	⚡️ Building project...
+2025-09-07T07:24:19.697996Z	▲  npm warn exec The following package was not found and will be installed: vercel@47.0.5
+2025-09-07T07:24:22.298847Z	▲  npm warn deprecated path-match@1.2.4: This package is archived and no longer maintained. For support, visit https://github.com/expressjs/express/discussions
+2025-09-07T07:24:23.929762Z	▲  Vercel CLI 47.0.5
+2025-09-07T07:24:23.934188Z	▲  > NOTE: The Vercel CLI now collects telemetry regarding usage of the CLI.
+2025-09-07T07:24:23.934601Z	▲  > This information is used to shape the CLI roadmap and prioritize features.
+2025-09-07T07:24:23.934969Z	▲  > You can learn more, including how to opt-out if you'd not like to participate in this program, by visiting the following URL:
+2025-09-07T07:24:23.935579Z	▲  > https://vercel.com/docs/cli/about-telemetry
+2025-09-07T07:24:24.042751Z	▲  WARN! Build not running on Vercel. System environment variables will not be available.
+2025-09-07T07:24:24.242041Z	▲  Installing dependencies...
+2025-09-07T07:24:25.159437Z	▲  up to date in 791ms
+2025-09-07T07:24:25.160014Z	▲  147 packages are looking for funding
+2025-09-07T07:24:25.160158Z	▲  run `npm fund` for details
+2025-09-07T07:24:25.167955Z	▲  Detected Next.js version: 14.2.32
+2025-09-07T07:24:25.171903Z	▲  Running "npm run build"
+2025-09-07T07:24:25.359571Z	▲  > sports-car-showcase@0.1.0 build
+2025-09-07T07:24:25.359812Z	▲  > next build
+2025-09-07T07:24:26.038085Z	▲  Attention: Next.js now collects completely anonymous telemetry regarding usage.
+2025-09-07T07:24:26.038643Z	▲  This information is used to shape Next.js' roadmap and prioritize features.
+2025-09-07T07:24:26.038777Z	▲  You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+2025-09-07T07:24:26.039355Z	▲  https://nextjs.org/telemetry
+2025-09-07T07:24:26.100953Z	▲  ▲ Next.js 14.2.32
+2025-09-07T07:24:26.101307Z	▲  
+2025-09-07T07:24:26.15853Z	▲  Creating an optimized production build ...
+2025-09-07T07:24:30.960686Z	▲  Failed to compile.
+2025-09-07T07:24:30.960987Z	▲  ./src/components/ui/LuxuryCarCollection.tsx
+2025-09-07T07:24:30.961091Z	▲  Error: 
+2025-09-07T07:24:30.96128Z	▲   [31mx[0m Unexpected token `section`. Expected jsx identifier
+2025-09-07T07:24:30.961389Z	▲      ,-[[36;1;4m/opt/buildhome/repo/src/components/ui/LuxuryCarCollection.tsx[0m:156:1]
+2025-09-07T07:24:30.961452Z	▲  [2m156[0m |   };
+2025-09-07T07:24:30.961527Z	▲  [2m157[0m | 
+2025-09-07T07:24:30.961775Z	▲  [2m158[0m |   return (
+2025-09-07T07:24:30.961938Z	▲  [2m159[0m |     <section className="relative min-h-screen bg-gradient-to-br from-black via-gray-900 to-blue-900/20 py-20 px-4">
+2025-09-07T07:24:30.962044Z	▲      : [31;1m     ^^^^^^^[0m
+2025-09-07T07:24:30.962134Z	▲  [2m160[0m |       {/* Background Pattern */}
+2025-09-07T07:24:30.962269Z	▲  [2m161[0m |       <div className="absolute inset-0 opacity-5">
+2025-09-07T07:24:30.962407Z	▲  [2m162[0m |         <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 via-orange-500/10 to-yellow-500/10" />
+2025-09-07T07:24:30.962491Z	▲      `----
+2025-09-07T07:24:30.962606Z	▲  
+2025-09-07T07:24:30.962709Z	▲  Caused by:
+2025-09-07T07:24:30.962802Z	▲     Syntax Error
+2025-09-07T07:24:30.963008Z	▲  
+2025-09-07T07:24:30.963195Z	▲  Import trace for requested module:
+2025-09-07T07:24:30.963316Z	▲  ./src/components/ui/LuxuryCarCollection.tsx
+2025-09-07T07:24:30.963419Z	▲  ./src/app/page.tsx
+2025-09-07T07:24:30.963535Z	▲  
+2025-09-07T07:24:30.963711Z	▲  ./src/app/nuevos-lanzamientos/page.tsx
+2025-09-07T07:24:30.96386Z	▲  Error: 
+2025-09-07T07:24:30.963989Z	▲   [31mx[0m Unexpected token `div`. Expected jsx identifier
+2025-09-07T07:24:30.964097Z	▲      ,-[[36;1;4m/opt/buildhome/repo/src/app/nuevos-lanzamientos/page.tsx[0m:314:1]
+2025-09-07T07:24:30.964321Z	▲  [2m314[0m |   };
+2025-09-07T07:24:30.964456Z	▲  [2m315[0m | 
+2025-09-07T07:24:30.964598Z	▲  [2m316[0m |   return (
+2025-09-07T07:24:30.964709Z	▲  [2m317[0m |     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-blue-900/20">
+2025-09-07T07:24:30.964952Z	▲      : [31;1m     ^^^[0m
+2025-09-07T07:24:30.965119Z	▲  [2m318[0m |       <ClientNavbar />
+2025-09-07T07:24:30.965241Z	▲  [2m319[0m |       
+2025-09-07T07:24:30.965351Z	▲  [2m320[0m |       {/* Hero Section with Horizontal Car Cards */}
+2025-09-07T07:24:30.965416Z	▲      `----
+2025-09-07T07:24:30.965504Z	▲  
+2025-09-07T07:24:30.965603Z	▲  Caused by:
+2025-09-07T07:24:30.965702Z	▲     Syntax Error
+2025-09-07T07:24:30.965797Z	▲  
+2025-09-07T07:24:30.965942Z	▲  Import trace for requested module:
+2025-09-07T07:24:30.966153Z	▲  ./src/app/nuevos-lanzamientos/page.tsx
+2025-09-07T07:24:30.984899Z	▲  
+2025-09-07T07:24:30.985142Z	▲  > Build failed because of webpack errors
+2025-09-07T07:24:31.020493Z	▲  Error: Command "npm run build" exited with 1
+2025-09-07T07:24:31.163134Z	
+2025-09-07T07:24:31.163441Z	⚡️ The Vercel build (`npx vercel build`) command failed. For more details see the Vercel logs above.
+2025-09-07T07:24:31.163564Z	⚡️ If you need help solving the issue, refer to the Vercel or Next.js documentation or their repositories.
+2025-09-07T07:24:31.163655Z	
+2025-09-07T07:24:31.196593Z	Failed: Error while executing user command. Exited with error code: 1
+2025-09-07T07:24:31.205792Z	Failed: build command exited with code: 1
+2025-09-07T07:24:32.528646Z	Failed: error occurred while running build command

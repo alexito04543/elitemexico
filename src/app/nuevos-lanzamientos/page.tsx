@@ -890,7 +890,6 @@ export default function NuevosLanzamientosPage() {
             }}
           />
         </section>
-      ))}
 
     </div>
   );

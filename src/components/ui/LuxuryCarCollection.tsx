@@ -109,6 +109,52 @@ export function LuxuryCarCollection() {
     }
   };
 
+  const getSpecialHoverEffect = (carId: number) => {
+    const isSpecialCard = carId <= 3;
+    if (!isSpecialCard) return cardHoverVariants;
+    
+    switch(carId) {
+      case 1:
+        return {
+          hover: {
+            scale: 1.05,
+            y: -12,
+            rotateY: [0, 5, -5, 0],
+            transition: {
+              duration: 0.6,
+              ease: "easeOut"
+            }
+          }
+        };
+      case 2:
+        return {
+          hover: {
+            scale: 1.04,
+            y: -10,
+            rotateX: [0, 2, -2, 0],
+            transition: {
+              duration: 0.8,
+              ease: "easeInOut"
+            }
+          }
+        };
+      case 3:
+        return {
+          hover: {
+            scale: 1.06,
+            y: -15,
+            rotateZ: [0, 1, -1, 0],
+            transition: {
+              duration: 0.5,
+              ease: "easeOut"
+            }
+          }
+        };
+      default:
+        return cardHoverVariants;
+    }
+  };
+
   return (
     <section className="relative min-h-screen bg-gradient-to-br from-black via-gray-900 to-blue-900/20 py-20 px-4">
       {/* Background Pattern */}
@@ -176,53 +222,6 @@ export function LuxuryCarCollection() {
           viewport={{ once: true, amount: 0.2 }}
         >
           {luxuryCars.map((car) => {
-            // Efectos especiales para las primeras 3 cards
-            const isSpecialCard = car.id <= 3;
-            
-            const getSpecialHoverEffect = () => {
-              if (!isSpecialCard) return cardHoverVariants;
-              
-              switch(car.id) {
-                case 1: // Supercar Elite - Efecto de fuego y velocidad
-                  return {
-                    hover: {
-                      scale: 1.05,
-                      y: -12,
-                      rotateY: [0, 5, -5, 0],
-                      transition: {
-                        duration: 0.6,
-                        ease: "easeOut"
-                      }
-                    }
-                  };
-                case 2: // Grand Tourer - Efecto de lujo elegante
-                  return {
-                    hover: {
-                      scale: 1.04,
-                      y: -10,
-                      rotateX: [0, 2, -2, 0],
-                      transition: {
-                        duration: 0.8,
-                        ease: "easeInOut"
-                      }
-                    }
-                  };
-                case 3: // Hyper Coupe - Efecto futurista
-                  return {
-                    hover: {
-                      scale: 1.06,
-                      y: -15,
-                      rotateZ: [0, 1, -1, 0],
-                      transition: {
-                        duration: 0.5,
-                        ease: "easeOut"
-                      }
-                    }
-                  };
-                default:
-                  return cardHoverVariants;
-              }
-            };
 
             return (
               <motion.div
@@ -441,7 +440,7 @@ export function LuxuryCarCollection() {
                   </>
                 )}
 
-                <motion.div variants={getSpecialHoverEffect()}>
+                <motion.div variants={getSpecialHoverEffect(car.id)}>
                 {/* Car Image Placeholder */}
                 <div className="relative h-64 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center border-b border-orange-500/20">
                   {car.imagePath ? (

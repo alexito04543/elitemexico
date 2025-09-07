@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-// Force Git sync - nuevos lanzamientos page
 import ClientNavbar from '@/components/layout/ClientNavbar';
 
 interface CarLaunch {

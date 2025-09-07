@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ClientNavbar from '@/components/layout/ClientNavbar';
 
@@ -102,7 +102,7 @@ const features = [
 ];
 
 export default function NuevosLanzamientosPage() {
-  const [showSoundModal, setShowSoundModal] = useState(false);
+  // Removed unused showSoundModal state
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
@@ -151,7 +151,7 @@ export default function NuevosLanzamientosPage() {
               console.log('Audio data loaded');
             };
 
-            const onError = (e: any) => {
+            const onError = (e: Event) => {
               console.error('Audio load error:', e);
               console.error('Audio error details:', audio!.error);
               cleanup();
@@ -222,7 +222,7 @@ export default function NuevosLanzamientosPage() {
 
   // Fallback function to create an engine sound using Web Audio API
   const createBeepSound = () => {
-    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
     
     // Create multiple oscillators for a more realistic engine sound
     const oscillators: OscillatorNode[] = [];
@@ -353,6 +353,7 @@ export default function NuevosLanzamientosPage() {
                 {/* Car Image Section */}
                 <div className="lg:w-1/2 h-80 lg:h-96 bg-gradient-to-br from-gray-800 to-gray-900 relative overflow-hidden">
                   {currentCar.imagePath ? (
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={currentCar.imagePath}
                       alt={currentCar.name}
@@ -473,7 +474,7 @@ export default function NuevosLanzamientosPage() {
                   </span>
                 </h3>
                 <p className="text-gray-300 text-lg leading-relaxed max-w-lg mx-auto">
-                  Sumérgete en el rugido legendario del motor V8 Big Block 454 del Corvette Stingray '74
+                  Sumérgete en el rugido legendario del motor V8 Big Block 454 del Corvette Stingray &apos;74
                 </p>
               </div>
 
@@ -518,7 +519,7 @@ export default function NuevosLanzamientosPage() {
                         {/* Text Content */}
                         <div className="text-left">
                           <div className="text-xl font-bold">Encender Motor</div>
-                          <div className="text-sm text-orange-100 font-medium">Corvette Stingray '74</div>
+                          <div className="text-sm text-orange-100 font-medium">Corvette Stingray &apos;74</div>
                         </div>
                       </div>
                     </motion.button>
@@ -722,6 +723,7 @@ export default function NuevosLanzamientosPage() {
                   transition={{ duration: 0.3 }}
                 >
                   {feature.imagePath ? (
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={feature.imagePath}
                       alt={feature.title}

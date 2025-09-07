@@ -445,6 +445,7 @@ export function LuxuryCarCollection() {
                 {/* Car Image Placeholder */}
                 <div className="relative h-64 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center border-b border-orange-500/20">
                   {car.imagePath ? (
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={car.imagePath}
                       alt={car.name}

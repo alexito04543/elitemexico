@@ -148,7 +148,7 @@ export function StaticFrameHero({ className = '' }: StaticFrameHeroProps) {
           backgroundSize: 'cover',
           backgroundPosition: 'center center',
           backgroundRepeat: 'no-repeat',
-          imageRendering: 'high-quality',
+          imageRendering: 'auto',
           filter: 'brightness(0.88) contrast(1.45) saturate(1.18) blur(0px)',
           WebkitFilter: 'brightness(0.88) contrast(1.45) saturate(1.18) blur(0px)',
           transform: 'translateZ(0)', // Force GPU acceleration

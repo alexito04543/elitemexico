@@ -150,7 +150,7 @@ export function SecondFrameSection({ className = '' }: SecondFrameSectionProps) 
           backgroundSize: 'cover',
           backgroundPosition: 'center center',
           backgroundRepeat: 'no-repeat',
-          imageRendering: 'high-quality',
+          imageRendering: 'auto',
           filter: 'brightness(0.85) contrast(1.4) saturate(1.15) blur(0px)',
           WebkitFilter: 'brightness(0.85) contrast(1.4) saturate(1.15) blur(0px)',
           transform: 'translateZ(0)', // Force GPU acceleration

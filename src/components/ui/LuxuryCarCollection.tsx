@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 
@@ -221,7 +222,8 @@ export function LuxuryCarCollection() {
           viewport={{ once: true, amount: 0.2 }}
         >
           {luxuryCars.map((car) => {
-
+            const isSpecialCard = car.id <= 3;
+            
             return (
               <motion.div
                 key={car.id}

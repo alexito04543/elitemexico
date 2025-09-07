@@ -18,6 +18,11 @@ const nextConfig = {
   swcMinify: true,
   compress: true,
   
+  // Compiler options
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+  
   // PWA and offline support
   headers: async () => [
     {

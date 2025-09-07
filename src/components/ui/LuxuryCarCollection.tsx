@@ -161,8 +161,7 @@ export function LuxuryCarCollection() {
       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 via-orange-500/10 to-yellow-500/10" />
         <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle at 25% 25%, rgba(255,255,255,0.02) 1px, transparent 1px),
-                           radial-gradient(circle at 75% 75%, rgba(255,255,255,0.02) 1px, transparent 1px)`,
+          backgroundImage: `radial-gradient(circle at 25% 25%, rgba(255,255,255,0.02) 1px, transparent 1px), radial-gradient(circle at 75% 75%, rgba(255,255,255,0.02) 1px, transparent 1px)`,
           backgroundSize: '50px 50px'
         }} />
       </div>

@@ -102,7 +102,6 @@ const features = [
 ];
 
 export default function NuevosLanzamientosPage() {
-  // Removed unused showSoundModal state
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);

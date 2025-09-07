@@ -76,3 +76,50 @@ html {
   scrollbar-width: thin;
   scrollbar-color: #ef4444 #1f2937;
 }
+
+/* ========== HIGH QUALITY IMAGE RENDERING ========== */
+
+/* Ultra-sharp image rendering for crisp quality */
+.high-quality-bg {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+}
+
+/* Enhanced sharpness and clarity */
+.ultra-sharp {
+  filter: contrast(1.15) brightness(1.02) saturate(1.08) blur(0px);
+  -webkit-filter: contrast(1.15) brightness(1.02) saturate(1.08) blur(0px);
+}
+
+/* GPU acceleration for smooth performance */
+.gpu-accelerated {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: transform, background-image;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  perspective: 1000px;
+  -webkit-perspective: 1000px;
+}
+
+/* High-DPI display optimization */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .retina-optimized {
+    image-rendering: -webkit-optimize-contrast;
+    filter: contrast(1.05) brightness(1.01) saturate(1.02);
+  }
+}
+
+/* 4K and ultra-high resolution optimization */
+@media (min-width: 2560px) {
+  .ultra-hd-optimized {
+    filter: contrast(1.08) brightness(1.01) saturate(1.05) unsharp-mask(0.5px, 0.3, 0);
+  }
+}

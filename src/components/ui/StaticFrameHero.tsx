@@ -8,17 +8,178 @@ interface StaticFrameHeroProps {
 }
 
 export function StaticFrameHero({ className = '' }: StaticFrameHeroProps) {
-  // Simplified version to prevent React loops
-  const [isLoaded, setIsLoaded] = useState(true);
+  const [currentFrame, setCurrentFrame] = useState(94);
+  const [loadedFrames, setLoadedFrames] = useState(new Set<number>());
+  const [isAllLoaded, setIsAllLoaded] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const imageCache = useRef<Map<number, HTMLImageElement>>(new Map());
+  
+  // Frame range for carro4: from 94 to 205 (112 frames total)
+  const startFrame = 94;
+  const endFrame = 205;
+  const totalFrames = endFrame - startFrame + 1; // 112 frames
+  
+  // Preload ALL frames for completely smooth animation
+  const preloadAllFrames = useCallback(() => {
+    let loadedCount = 0;
+    const promises: Promise<void>[] = [];
+    
+    for (let i = startFrame; i <= endFrame; i++) {
+      const promise = new Promise<void>((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          imageCache.current.set(i, img);
+          loadedCount++;
+          setLoadedFrames(prev => new Set([...prev, i]));
+          setLoadingProgress((loadedCount / totalFrames) * 100);
+          resolve();
+        };
+        img.onerror = () => {
+          console.warn(`Failed to load frame ${i}`);
+          loadedCount++;
+          setLoadingProgress((loadedCount / totalFrames) * 100);
+          resolve();
+        };
+        img.src = `/images/carro4/carro4_${i.toString().padStart(6, '0')}.jpg`;
+      });
+      promises.push(promise);
+    }
+    
+    Promise.all(promises).then(() => {
+      setIsAllLoaded(true);
+      console.log('All frames loaded successfully!');
+    });
+  }, [totalFrames, startFrame, endFrame]);
+
+  // Handle scroll-based frame animation
+  const handleScroll = useCallback(() => {
+    if (!containerRef.current) return;
+    
+    const rect = containerRef.current.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+    const elementHeight = rect.height;
+    
+    // Calculate scroll progress (0 to 1)
+    const scrollProgress = Math.max(0, Math.min(1, 
+      (windowHeight - rect.top) / (windowHeight + elementHeight)
+    ));
+    
+    // Map scroll progress to frame number (startFrame to endFrame)
+    const frameNumber = Math.floor(scrollProgress * (totalFrames - 1)) + startFrame;
+    
+    if (frameNumber !== currentFrame && frameNumber >= startFrame && frameNumber <= endFrame) {
+      setCurrentFrame(frameNumber);
+    }
+  }, [currentFrame, totalFrames, startFrame, endFrame]);
+
+  // Set up scroll listener with optimized performance
+  useEffect(() => {
+    preloadAllFrames();
+    
+    let ticking = false;
+    const optimizedScrollHandler = () => {
+      if (!ticking && isAllLoaded) {
+        requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', optimizedScrollHandler, { passive: true });
+    window.addEventListener('resize', optimizedScrollHandler, { passive: true });
+    
+    // Initial call only after images are loaded
+    if (isAllLoaded) {
+      optimizedScrollHandler();
+    }
+    
+    return () => {
+      window.removeEventListener('scroll', optimizedScrollHandler);
+      window.removeEventListener('resize', optimizedScrollHandler);
+    };
+  }, [handleScroll, preloadAllFrames, isAllLoaded]);
+
+  // Generate frame image path
+  const currentFrameImage = useMemo(() => 
+    `/images/carro4/carro4_${currentFrame.toString().padStart(6, '0')}.jpg`,
+    [currentFrame]
+  );
 
   return (
-    <div className={`relative h-[120vh] lg:h-[150vh] xl:h-[180vh] overflow-hidden ${className}`}>
-      {/* Static Background - No animation to prevent React loops */}
+    <div ref={containerRef} className={`relative h-[120vh] lg:h-[150vh] xl:h-[180vh] overflow-hidden ${className}`}>
+      {/* Loading Screen */}
+      {!isAllLoaded && (
+        <div className="absolute inset-0 bg-black flex items-center justify-center z-50">
+          <div className="text-center text-white">
+            <motion.div
+              className="text-6xl mb-4"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            >
+              🏎️
+            </motion.div>
+            <h2 className="text-2xl font-bold mb-4">Cargando Experiencia</h2>
+            <div className="w-64 h-2 bg-gray-700 rounded-full mx-auto mb-2">
+              <div 
+                className="h-2 bg-gradient-to-r from-red-500 to-orange-500 rounded-full transition-all duration-300"
+                style={{ width: `${loadingProgress}%` }}
+              />
+            </div>
+            <p className="text-sm text-gray-400">{Math.round(loadingProgress)}% - {loadedFrames.size}/{totalFrames} frames</p>
+            <p className="text-xs text-blue-300 mt-1">Carro 4 - Frames {startFrame} to {endFrame}</p>
+          </div>
+        </div>
+      )}
+
+      {/* Animated Background with Frame Sequence - Ultra High Quality */}
       <div 
-        className="absolute inset-0 w-full h-full bg-cover bg-center"
+        className={`absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-300 high-quality-bg gpu-accelerated retina-optimized ultra-hd-optimized ${
+          isAllLoaded ? 'opacity-100' : 'opacity-0'
+        }`}
         style={{ 
-          backgroundImage: `url(/images/carro3/carro3_000001.jpg)`,
-          filter: 'brightness(0.8) contrast(1.3) saturate(1.1)'
+          backgroundImage: isAllLoaded ? `url(${currentFrameImage})` : undefined,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center center',
+          backgroundRepeat: 'no-repeat',
+          imageRendering: 'high-quality',
+          filter: 'brightness(0.88) contrast(1.45) saturate(1.18) blur(0px)',
+          WebkitFilter: 'brightness(0.88) contrast(1.45) saturate(1.18) blur(0px)',
+          transform: 'translateZ(0)', // Force GPU acceleration
+          willChange: 'background-image',
+          backfaceVisibility: 'hidden',
+          WebkitBackfaceVisibility: 'hidden',
+        }}
+      />
+      
+      {/* Ultra-Sharp Detail Enhancement Layer */}
+      <div 
+        className={`absolute inset-0 w-full h-full bg-cover bg-center mix-blend-soft-light opacity-15 ultra-sharp gpu-accelerated ${
+          isAllLoaded ? 'block' : 'hidden'
+        }`}
+        style={{ 
+          backgroundImage: isAllLoaded ? `url(${currentFrameImage})` : undefined,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center center',
+          filter: 'contrast(1.8) brightness(1.15) blur(0px)',
+          transform: 'translateZ(0)',
+          imageRendering: 'crisp-edges',
+        }}
+      />
+      
+      {/* Additional Clarity Enhancement for Professional Quality */}
+      <div 
+        className={`absolute inset-0 w-full h-full bg-cover bg-center mix-blend-luminosity opacity-8 ${
+          isAllLoaded ? 'block' : 'hidden'
+        }`}
+        style={{ 
+          backgroundImage: isAllLoaded ? `url(${currentFrameImage})` : undefined,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center center',
+          filter: 'contrast(2.2) brightness(1.1) saturate(0.9)',
+          transform: 'translateZ(0)',
         }}
       />
       
@@ -134,6 +295,24 @@ export function StaticFrameHero({ className = '' }: StaticFrameHeroProps) {
               </div>
             </motion.div>
           </motion.div>
+
+          {/* Frame Debug Indicator (bottom-left) - Only show when loaded */}
+          {isAllLoaded && (
+            <div className="fixed bottom-4 left-4 bg-black/60 backdrop-blur-sm border border-red-500/30 rounded-lg p-2 z-20">
+              <div className="text-xs text-white font-mono">
+                Frame: <span className="text-red-400 font-bold">{currentFrame}</span>/{totalFrames}
+              </div>
+              <div className="w-20 h-1 bg-gray-700 rounded-full mt-1">
+                <div 
+                  className="h-1 bg-gradient-to-r from-red-500 to-orange-500 rounded-full"
+                  style={{ width: `${((currentFrame - startFrame) / (totalFrames - 1)) * 100}%` }}
+                />
+              </div>
+              <div className="text-xs text-green-400 mt-1">
+                ✅ {loadedFrames.size} frames ready
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

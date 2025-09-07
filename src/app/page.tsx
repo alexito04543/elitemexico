@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { StaticFrameHero } from '@/components/ui/StaticFrameHero';
 import { SecondFrameSection } from '@/components/ui/SecondFrameSection';
-import { LuxuryCarCollection } from '@/components/ui/LuxuryCarCollection';
+import { LuxuryCarCollection } from '@/components/ui/LuxuryCarCollectionSimple';
 
 
 export default function Home() {

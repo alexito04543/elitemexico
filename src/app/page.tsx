@@ -13,7 +13,7 @@ export default function Home() {
       {/* Hero Section with Static Frame Animation */}
       <StaticFrameHero />
 
-      {/* Enhanced Smooth Transition Divider */}
+      {/* Enhanced Smooth Transition Divider - Elite Edition */}
       <div className="relative h-40 bg-gradient-to-b from-black via-gray-900/80 to-blue-900/30 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-red-500/15 via-purple-500/10 to-blue-500/15" />
         
